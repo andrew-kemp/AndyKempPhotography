@@ -219,6 +219,9 @@ class AndyKemp_Walker_Nav_Menu extends Walker_Nav_Menu {
         $classes = empty($item->classes) ? array() : (array) $item->classes;
         $classes[] = 'menu-item-' . $item->ID;
         
+        // Check if this item has children
+        $has_children = in_array('menu-item-has-children', $classes);
+        
         $class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
         $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
         
@@ -236,6 +239,12 @@ class AndyKemp_Walker_Nav_Menu extends Walker_Nav_Menu {
         $item_output .= '<a' . $attributes .'>';
         $item_output .= (isset($args->link_before) ? $args->link_before : '') . apply_filters('the_title', $item->title, $item->ID) . (isset($args->link_after) ? $args->link_after : '');
         $item_output .= '</a>';
+        
+        // Add mobile sub-menu toggle button if this item has children
+        if ($has_children) {
+            $item_output .= '<button class="mobile-submenu-toggle" aria-label="Toggle ' . esc_attr($item->title) . ' submenu"><i class="fas fa-chevron-down"></i></button>';
+        }
+        
         $item_output .= isset($args->after) ? $args->after : '';
         
         $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);

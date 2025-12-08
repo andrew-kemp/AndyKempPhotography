@@ -88,43 +88,118 @@
 
     // Mobile Menu
     function initMobileMenu() {
-        console.log('Initializing mobile menu...');
         const mobileToggle = document.getElementById('mobile-menu-toggle');
         const navMenu = document.querySelector('.nav-menu');
-        
-        console.log('Mobile toggle found:', !!mobileToggle);
-        console.log('Nav menu found:', !!navMenu);
+        const navContainer = document.querySelector('.nav-container');
         
         if (mobileToggle && navMenu) {
-            console.log('Setting up mobile menu listeners...');
+            // Ensure all sub-menus start closed when page loads
+            navMenu.querySelectorAll('.sub-menu').forEach(submenu => {
+                submenu.classList.remove('mobile-submenu-open');
+                submenu.style.display = 'none';
+            });
             
+            navMenu.querySelectorAll('.mobile-submenu-toggle').forEach(toggle => {
+                toggle.classList.remove('active');
+            });
+            
+            // Main toggle handler
             mobileToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                e.stopImmediatePropagation();
                 
-                console.log('Mobile menu toggle clicked');
+                const isOpen = navMenu.classList.contains('mobile-menu-open');
                 
-                this.classList.toggle('active');
-                navMenu.classList.toggle('mobile-menu-open');
-                
-                console.log('Menu open:', navMenu.classList.contains('mobile-menu-open'));
-                
-                // Prevent body scroll when menu is open
-                if (navMenu.classList.contains('mobile-menu-open')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
+                if (isOpen) {
+                    // Close menu
+                    this.classList.remove('active');
+                    navMenu.classList.remove('mobile-menu-open');
                     document.body.style.overflow = '';
+                    // Close any open submenus
+                    navMenu.querySelectorAll('.sub-menu.mobile-submenu-open').forEach(submenu => {
+                        submenu.classList.remove('mobile-submenu-open');
+                    });
+                    navMenu.querySelectorAll('.mobile-submenu-toggle.active').forEach(toggle => {
+                        toggle.classList.remove('active');
+                    });
+                } else {
+                    // Open menu
+                    this.classList.add('active');
+                    navMenu.classList.add('mobile-menu-open');
+                    document.body.style.overflow = 'hidden';
                 }
+            }, true);
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (navMenu.classList.contains('mobile-menu-open')) {
+                    if (!navContainer.contains(e.target)) {
+                        mobileToggle.classList.remove('active');
+                        navMenu.classList.remove('mobile-menu-open');
+                        document.body.style.overflow = '';
+                        // Close any open submenus
+                        navMenu.querySelectorAll('.sub-menu.mobile-submenu-open').forEach(submenu => {
+                            submenu.classList.remove('mobile-submenu-open');
+                        });
+                        navMenu.querySelectorAll('.mobile-submenu-toggle.active').forEach(toggle => {
+                            toggle.classList.remove('active');
+                        });
+                    }
+                }
+            });
+            
+            // Prevent menu from closing when clicking inside the menu
+            navMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Handle sub-menu toggles
+            const submenuToggles = navMenu.querySelectorAll('.mobile-submenu-toggle');
+            submenuToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const parentLi = this.closest('li');
+                    const submenu = parentLi.querySelector('.sub-menu');
+                    
+                    if (submenu) {
+                        const isOpen = submenu.classList.contains('mobile-submenu-open');
+                        
+                        // Close all other submenus
+                        navMenu.querySelectorAll('.sub-menu.mobile-submenu-open').forEach(openSubmenu => {
+                            if (openSubmenu !== submenu) {
+                                openSubmenu.classList.remove('mobile-submenu-open');
+                                const otherToggle = openSubmenu.closest('li').querySelector('.mobile-submenu-toggle');
+                                if (otherToggle) otherToggle.classList.remove('active');
+                            }
+                        });
+                        
+                        // Toggle current submenu
+                        if (isOpen) {
+                            submenu.classList.remove('mobile-submenu-open');
+                            this.classList.remove('active');
+                        } else {
+                            submenu.classList.add('mobile-submenu-open');
+                            this.classList.add('active');
+                        }
+                    }
+                });
             });
             
             // Close mobile menu when clicking on a link
             const menuLinks = navMenu.querySelectorAll('a');
             menuLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    console.log('Menu link clicked, closing menu');
-                    mobileToggle.classList.remove('active');
-                    navMenu.classList.remove('mobile-menu-open');
-                    document.body.style.overflow = '';
+                link.addEventListener('click', (e) => {
+                    // Only close if it's not a hash link or if we're navigating away
+                    const href = link.getAttribute('href');
+                    if (!href || !href.startsWith('#') || href === '#') {
+                        console.log('Menu link clicked, closing menu');
+                        mobileToggle.classList.remove('active');
+                        navMenu.classList.remove('mobile-menu-open');
+                        document.body.style.overflow = '';
+                    }
                 });
             });
             
@@ -201,7 +276,7 @@
 
     // Smooth scrolling for anchor links
     function initSmoothScrolling() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        document.querySelectorAll('a[href^="#"]:not(.nav-menu a)').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));

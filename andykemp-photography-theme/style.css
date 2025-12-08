@@ -1,7 +1,7 @@
 /*
 Theme Name: Andy Kemp Photography
 Description: A modern, clean photography theme with dual color schemes and hero image layout. Features semi-transparent navigation, single column layout, and social media integration.
-Version: 1.0.0
+Version: 1.6.2
 Author: Andy Kemp
 Text Domain: andykemp-photography
 Tags: photography, portfolio, clean, modern, responsive, dark-mode, light-mode
@@ -14,6 +14,8 @@ Tags: photography, portfolio, clean, modern, responsive, dark-mode, light-mode
     --text-primary: #ffffff;
     --text-secondary: #cccccc;
     --accent-color: #ecf0f1;
+    --signature-color: #f39c12; /* Golden Hour - Photography signature color */
+    --signature-hover: #e67e22; /* Darker golden for deeper hover effect */
     --overlay-bg: rgba(26, 26, 26, 0.9);
     --menu-bg: rgba(26, 26, 26, 0.85);
     --border-color: #404040;
@@ -37,6 +39,70 @@ body {
     color: var(--text-primary);
     background-color: var(--primary-bg);
     transition: all 0.3s ease;
+}
+
+/* Button Styles */
+.btn, 
+button, 
+input[type="submit"], 
+input[type="button"], 
+.wp-block-button__link,
+.read-more,
+.button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 2px solid var(--accent-color);
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.btn:hover, 
+button:hover, 
+input[type="submit"]:hover, 
+input[type="button"]:hover, 
+.wp-block-button__link:hover,
+.read-more:hover,
+.button:hover {
+    background-color: var(--signature-color);
+    border-color: var(--signature-color);
+    color: var(--primary-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+}
+
+.btn:active, 
+button:active, 
+input[type="submit"]:active, 
+input[type="button"]:active, 
+.wp-block-button__link:active,
+.read-more:active,
+.button:active {
+    background-color: var(--signature-hover);
+    border-color: var(--signature-hover);
+    transform: translateY(0);
+}
+
+/* Primary Button Variation */
+.btn-primary,
+.button-primary {
+    background-color: var(--signature-color);
+    border-color: var(--signature-color);
+    color: var(--primary-bg);
+}
+
+.btn-primary:hover,
+.button-primary:hover {
+    background-color: var(--signature-hover);
+    border-color: var(--signature-hover);
+    color: var(--primary-bg);
 }
 
 /* Hero Section */
@@ -188,6 +254,71 @@ body {
     display: block;
 }
 
+/* Desktop Sub-menu Styling */
+@media (min-width: 769px) {
+    .nav-menu .sub-menu {
+        position: absolute !important;
+        top: 100%;
+        left: 0;
+        background: var(--menu-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        min-width: 200px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        list-style: none;
+        margin: 0;
+        padding: 10px 0;
+        display: block !important;
+    }
+    
+    .nav-menu li:hover > .sub-menu {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0);
+    }
+    
+    .nav-menu .sub-menu li {
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+    
+    .nav-menu .sub-menu a {
+        display: block;
+        padding: 12px 20px;
+        font-size: 14px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+    }
+    
+    .nav-menu .sub-menu a:hover {
+        color: var(--accent-color);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .nav-menu .sub-menu a::after {
+        display: none;
+    }
+    
+    .nav-menu li {
+        position: relative;
+    }
+    
+    /* Hide mobile submenu toggles completely on desktop */
+    .mobile-submenu-toggle {
+        display: none !important;
+    }
+}
+
 /* Mobile Menu Toggle Animation */
 .mobile-menu-toggle.active .hamburger-line:nth-child(1) {
     transform: rotate(-45deg) translate(-5px, 6px);
@@ -309,14 +440,14 @@ body {
 .site-logo {
     width: 180px;
     height: 180px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(15px);
     flex-shrink: 0;
 }
 
@@ -450,7 +581,7 @@ body {
     }
     
     .hero-content {
-        padding: 40px 20px;
+        padding: 40px 50px;
         min-height: 40vh;
     }
     
@@ -461,8 +592,14 @@ body {
         left: 20px;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(0,0,0,0.1);
-        border-radius: 4px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+    }
+    
+    .mobile-menu-toggle:hover {
+        background: rgba(255,255,255,0.2);
     }
     
     .nav-container {
@@ -472,49 +609,170 @@ body {
     
     .nav-menu {
         display: none;
-        position: absolute;
+        position: fixed;
         top: 70px;
-        left: 0;
-        right: 0;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100vw;
         background: var(--menu-bg);
         backdrop-filter: blur(15px);
         border-bottom: 1px solid var(--border-color);
         flex-direction: column;
         padding: 20px;
-        gap: 20px;
+        gap: 0;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         z-index: 999;
+        max-height: calc(100vh - 90px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        transform: none !important;
+        margin: 0;
+        box-sizing: border-box;
+        transition: none;
     }
     
     .nav-menu.mobile-menu-open {
         display: flex !important;
-        animation: slideDown 0.3s ease;
+        visibility: visible;
+        opacity: 1;
+        animation: none;
+        transform: translateX(0) translateY(0);
+        position: fixed;
+        left: 0;
+        right: 0;
     }
     
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+    /* Removed slideDown animation to fix mobile menu positioning */
     
     .nav-menu li {
-        text-align: center;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+        margin: 0;
+    }
+    
+    .nav-menu li:last-child {
+        border-bottom: none;
+    }
+    
+    .nav-menu > li {
+        margin: 0;
     }
     
     .nav-menu a {
         display: block;
-        padding: 15px;
+        padding: 15px 0;
         font-size: 18px;
-        border-bottom: 1px solid var(--border-color);
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        border: none;
     }
     
     .nav-menu a:hover {
+        color: var(--accent-color);
+        background: none;
+    }
+    
+    /* Mobile Sub-menu Toggle Button - Only show on mobile */
+    .mobile-submenu-toggle {
+        display: none !important;
+    }
+    
+    .menu-item-has-children .mobile-submenu-toggle {
+        display: block !important;
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        transform: rotate(0deg);
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 16px;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 1;
+        transition: transform 0.3s ease;
+        width: auto;
+        height: auto;
+    }
+    
+    .mobile-submenu-toggle.active {
+        transform: rotate(180deg);
+    }
+    
+    .menu-item-has-children > a {
+        padding-right: 60px;
+    }
+    
+    /* Sub-menu Styling for Mobile - MUST start hidden */
+    .nav-menu .sub-menu {
+        display: none !important;
         background: var(--secondary-bg);
+        margin: 0;
+        padding: 10px 0;
+        list-style: none;
+        border-top: 1px solid var(--border-color);
+        width: 100%;
+        box-sizing: border-box;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        transform: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        z-index: auto;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    
+    /* Only show sub-menu when explicitly opened on mobile */
+    .nav-menu .sub-menu.mobile-submenu-open {
+        display: block !important;
+    }
+    
+    .nav-menu .sub-menu li {
+        border-bottom: 1px solid var(--border-color);
+        margin: 0;
+        padding: 0;
+    }
+    
+    .nav-menu .sub-menu li:last-child {
+        border-bottom: none;
+    }
+    
+    .nav-menu .sub-menu a {
+        padding: 12px 20px;
+        font-size: 16px;
+        color: var(--text-secondary);
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .nav-menu .sub-menu a:hover {
+        color: var(--accent-color);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .sub-menu li {
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .sub-menu li:last-child {
+        border-bottom: none;
+    }
+    
+    .sub-menu a {
+        padding: 12px 20px;
+        font-size: 16px;
+        color: var(--text-secondary);
+    }
+    
+    .sub-menu a:hover {
+        color: var(--accent-color);
+        background: rgba(255, 255, 255, 0.05);
     }
     
     .site-branding {
@@ -550,25 +808,31 @@ body {
     
     /* Mobile Branding Styles */
     .site-branding {
-        max-width: 100%;
-        padding: 0 20px;
+        max-width: calc(100% - 80px);
+        padding: 0 40px;
+        margin: 0 auto;
     }
     
     .branding-link {
         flex-direction: column;
-        gap: 25px;
-        padding: 0;
+        gap: 20px;
+        padding: 30px 20px;
         text-align: center;
     }
     
+    .hero-content {
+        padding: 60px 50px !important;
+        max-width: calc(100% - 40px);
+    }
+    
     .site-logo {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
     }
     
     .site-logo img {
-        max-width: 80px;
-        max-height: 80px;
+        max-width: 70px;
+        max-height: 70px;
     }
     
     .site-info {
@@ -576,13 +840,15 @@ body {
     }
     
     .site-title {
-        font-size: 3rem;
-        letter-spacing: 3px;
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+        line-height: 1.1;
     }
     
     .tagline {
-        font-size: 0.9rem;
-        letter-spacing: 2px;
+        font-size: 0.8rem;
+        letter-spacing: 1.5px;
+        margin-top: 10px;
     }
     
     /* Interior Header Mobile */
@@ -659,4 +925,126 @@ body {
 .portfolio-item p {
     color: var(--text-secondary);
     font-size: 14px;
+}
+
+/* About Me Section */
+.about-me {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    color: var(--text-primary);
+    text-align: left !important;
+    line-height: 1.65;
+    font-size: 16px;
+    overflow: visible;
+}
+
+/* Profile Image */
+.about-me .profile-pic {
+    float: left !important;
+    width: 280px !important; /* Match your HTML width attribute */
+    height: auto !important;
+    margin: 0 30px 20px 0 !important;
+    border-radius: 8px;
+    display: block !important;
+    object-fit: cover;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    clear: none !important;
+}
+
+.about-me .profile-pic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* About Me Paragraphs - only direct children, not those in .below */
+.about-me > p {
+    margin: 0 0 1.2rem 0 !important;
+    color: var(--text-primary) !important;
+    font-weight: 400;
+    text-align: left !important;
+    text-indent: 0 !important;
+    clear: none !important;
+    display: block !important;
+    width: auto !important;
+}
+
+.about-me p:first-of-type {
+    margin-top: 0;
+}
+
+.about-me p:last-of-type {
+    margin-bottom: 0;
+}
+
+/* About Me Headings */
+.about-me h1,
+.about-me h2,
+.about-me h3 {
+    color: var(--text-primary);
+    margin: 2rem 0 1rem 0;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.about-me h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.about-me h2 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--signature-color);
+    padding-bottom: 0.5rem;
+    clear: both;
+}
+
+.about-me h3 {
+    font-size: 1.3rem;
+    color: var(--signature-color);
+}
+
+/* Force content below image */
+.below {
+    clear: both;
+    padding-top: 1rem;
+}
+
+/* Clearfix for container */
+.about-me::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .about-me {
+        padding: 1rem;
+        font-size: 15px;
+    }
+    
+    .profile-pic {
+        float: none;
+        display: block;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 1.5rem auto;
+    }
+    
+    .about-me p {
+        text-align: left;
+        margin-bottom: 1rem;
+    }
+    
+    .about-me h1 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .about-me h2 {
+        font-size: 1.5rem;
+    }
 }
