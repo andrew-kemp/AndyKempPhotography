@@ -11,7 +11,6 @@ A modern, elegant WordPress theme designed specifically for photography websites
 ## ✨ Key Features
 
 ### 🎨 Modern Design
-- **Dual Color Schemes**: Seamless light and dark mode toggle with user preference memory
 - **Hero Section**: Full-viewport parallax hero with floating description overlay
 - **Custom Gallery Block**: WordPress block editor integration for featured galleries
 - **Responsive Grid**: CSS Grid and Flexbox layouts optimized for all devices
