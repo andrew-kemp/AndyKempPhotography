@@ -13,7 +13,9 @@ get_header(); ?>
         <div class="page-content" style="padding: 60px 40px;">
             
             <header class="page-header">
+                <?php if (!is_front_page()) : ?>
                 <h1 class="page-title"><?php the_title(); ?></h1>
+                <?php endif; ?>
                 
                 <?php if (has_excerpt()) : ?>
                 <div class="page-excerpt">
@@ -22,7 +24,11 @@ get_header(); ?>
                 <?php endif; ?>
             </header>
 
-            <?php if (has_post_thumbnail()) : ?>
+            <?php 
+            // Only show featured image on top-level pages (not gallery sub-pages)
+            $parent_id = wp_get_post_parent_id();
+            if (has_post_thumbnail() && $parent_id == 0) : 
+            ?>
             <div class="page-featured-image">
                 <?php the_post_thumbnail('large', array('style' => 'width: 100%; height: auto; border-radius: 10px; margin-bottom: 40px;')); ?>
             </div>

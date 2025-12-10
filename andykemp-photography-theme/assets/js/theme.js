@@ -299,13 +299,32 @@
         const heroSection = document.querySelector('.hero-section');
         
         if (!heroSection) return;
+        
+        // Check for reduced motion preference
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
 
-        window.addEventListener('scroll', function() {
+        let ticking = false;
+        
+        function updateParallax() {
             const scrollTop = window.pageYOffset;
-            const parallaxSpeed = 0.5;
+            const parallaxSpeed = 0.3;
             
-            heroSection.style.transform = `translateY(${scrollTop * parallaxSpeed}px)`;
-        });
+            // Use transform3d for better performance
+            heroSection.style.transform = `translate3d(0, ${scrollTop * parallaxSpeed}px, 0)`;
+            ticking = false;
+        }
+        
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }
+
+        // Use passive scroll listeners for better performance
+        window.addEventListener('scroll', requestTick, { passive: true });
     }
 
     // Image lazy loading enhancement
@@ -371,17 +390,57 @@
         });
     }
 
+    // Loading state management
+    function initLoadingState() {
+        const heroDesc = document.getElementById('hero-description-section');
+        if (heroDesc) {
+            // Add loading class initially
+            heroDesc.classList.add('loading');
+            
+            // Remove loading class after content loads
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    heroDesc.classList.remove('loading');
+                }, 100);
+            });
+        }
+    }
+    
+    // Intersection Observer for performance
+    function initIntersectionObserver() {
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '50px'
+            });
+            
+            // Observe gallery cards and other animated elements
+            document.querySelectorAll('.gallery-card, .portfolio-item').forEach(el => {
+                observer.observe(el);
+            });
+        }
+    }
+
     // Initialize all functions when DOM is ready
     $(document).ready(function() {
+        initLoadingState();
         initNavigationScroll();
         initStickyNavigation();
         initMobileMenu();
         initPortfolioAnimations();
         initSmoothScrolling();
         initHeroParallax();
+        initHeroTextParallax();
         initLazyLoading();
         initSearchEnhancement();
         initSocialTracking();
+        initIntersectionObserver();
     });
 
     // Add additional CSS for navigation scroll effect
@@ -456,5 +515,64 @@
     styleSheet.type = 'text/css';
     styleSheet.innerText = additionalCSS;
     document.head.appendChild(styleSheet);
+
+    // Hero Description Float Effect
+    function initHeroTextParallax() {
+        const heroDescSection = document.getElementById('hero-description-section');
+        const heroSection = document.querySelector('.hero-section');
+        
+        if (!heroDescSection || !heroSection) return;
+        
+        let heroHeight = heroSection.offsetHeight;
+        let descriptionOffset = heroDescSection.offsetTop;
+        
+        function updateFloatEffect() {
+            const scrolled = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+            const parallaxSpeed = 0.3; // Match the hero parallax speed
+            
+            // Adjust trigger points to account for parallax effect
+            const adjustedScroll = scrolled * (1 - parallaxSpeed); // Compensate for parallax
+            const triggerPoint = (descriptionOffset - windowHeight + 100) * (1 - parallaxSpeed);
+            const endPoint = (heroHeight + 200) * (1 - parallaxSpeed);
+            
+            if (adjustedScroll > triggerPoint && adjustedScroll < endPoint) {
+                // Floating over hero
+                heroDescSection.classList.add('floating');
+                heroDescSection.classList.remove('fading-out');
+            } else if (adjustedScroll >= endPoint) {
+                // Fade out and disappear
+                heroDescSection.classList.add('floating', 'fading-out');
+            } else {
+                // Normal position
+                heroDescSection.classList.remove('floating', 'fading-out');
+            }
+        }
+        
+        // Throttled scroll event
+        let ticking = false;
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateFloatEffect);
+                ticking = true;
+            }
+        }
+        
+        function handleScroll() {
+            requestTick();
+            ticking = false;
+        }
+        
+        // Update measurements on resize
+        window.addEventListener('resize', () => {
+            heroHeight = heroSection.offsetHeight;
+            descriptionOffset = heroDescSection.offsetTop;
+        });
+        
+        window.addEventListener('scroll', handleScroll);
+        
+        // Initial call
+        updateFloatEffect();
+    }
 
 })(jQuery);
